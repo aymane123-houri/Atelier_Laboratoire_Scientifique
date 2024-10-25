@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="AYMANE_HOURI_FINAL" />
+        <module name="Discovery_Service" />
+        <module name="Gateway-Service" />
+        <module name="Projet-Service" />
+        <module name="Configuration-Service" />
+        <module name="Chercheur-Service" />
+        <module name="Security_Microservice" />
+        <module name="Enseignant-Service" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Chercheur-Service" options="-parameters" />
+      <module name="Configuration-Service" options="-parameters" />
+      <module name="Discovery_Service" options="-parameters" />
+      <module name="Enseignant-Service" options="-parameters" />
+      <module name="Gateway-Service" options="-parameters" />
+      <module name="Projet-Service" options="-parameters" />
+      <module name="Security_Microservice" options="-parameters" />
+    </option>
+  </component>
+</project>

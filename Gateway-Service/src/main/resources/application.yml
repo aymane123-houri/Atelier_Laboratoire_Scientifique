@@ -1,0 +1,18 @@
+#spring:
+ # cloud:
+ #   gateway:
+  #    routes:
+   #     - id: r1
+    #      uri: http://localhost:8081
+     #     predicates:
+      #      - Path= /Enseignants/**
+       # - id: r2
+       #   uri: http://localhost:8082
+        #  predicates:
+         #   - Path= /Chercheurs/**
+        #- id: r3
+         # uri: http://localhost:8083
+         # predicates:
+          #  - Path= /Projets/**
+  #server:
+   # port: 8888
