@@ -1,0 +1,131 @@
+services:
+
+  mysql:
+    image: mysql
+    container_name: container-sql
+    volumes:
+      - /opt/data:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    networks:
+      default:
+        ipv4_address: 192.168.100.15
+
+  labo_discovery_service:
+    build: ./Discovery_Service
+    container_name: labo_discovery_service
+    ports:
+      - "8761:8761"
+    expose:
+      - "8761"
+    healthcheck:
+      test: ["CMD","curl","http://localhost:8761/actuator/health"]
+      interval: 10s
+      retries: 4
+    networks:
+      default:
+        ipv4_address: 192.168.100.10
+
+  labo_config_service:
+    build: ./Configuration-Service
+    container_name: labo_config_service
+    ports:
+      - "9999:9999"
+    expose:
+      - "9999"
+    healthcheck:
+      test: ["CMD","curl","http://localhost:9999/actuator/health"]
+      interval: 10s
+      retries: 4
+    environment:
+      - DISCOVERY_SERVICE_URL=http://192.168.100.10:8761/eureka
+    networks:
+      default:
+        ipv4_address: 192.168.100.20
+    depends_on:
+      labo_discovery_service:
+        condition: service_healthy
+
+  labo_gateway_service:
+    build: ./Gateway-Service
+    container_name: labo_gateway_service
+    ports:
+      - "8088:8088"
+    expose:
+      - "8088"
+    healthcheck:
+      test: ["CMD","curl","http://localhost:8088/actuator/health"]
+      interval: 10s
+      retries: 4
+    environment:
+      - DISCOVERY_SERVICE_URL=http://192.168.100.10:8761/eureka
+    depends_on:
+      labo_discovery_service:
+        condition: service_healthy
+
+  labo_enseignant_service:
+    build: ./Enseignant-Service
+    container_name: labo_enseignant_service
+    ports:
+      - "8081:8081"
+    expose:
+      - "8081"
+    healthcheck:
+      test: [ "CMD","curl","http://localhost:8081/actuator/health" ]
+      interval: 10s
+      retries: 4
+    environment:
+      - DISCOVERY_SERVICE_URL=http://192.168.100.10:8761/eureka
+      - CONFIG_SERVICE_URL=http://192.168.100.20:9999
+    depends_on:
+      labo_config_service:
+        condition: service_healthy
+
+
+  labo_chercheur_service:
+    build: ./Chercheur-Service
+    container_name: labo_chercheur_service
+    ports:
+      - "8084:8084"
+    expose:
+      - "8084"
+    healthcheck:
+      test: [ "CMD","curl","http://localhost:8084/actuator/health" ]
+      interval: 10s
+      retries: 4
+    environment:
+      - DISCOVERY_SERVICE_URL=http://192.168.100.10:8761/eureka
+      - CONFIG_SERVICE_URL=http://192.168.100.20:9999
+    depends_on:
+      labo_config_service:
+        condition: service_healthy
+
+
+  labo_projet_service:
+    build: ./Projet-Service
+    container_name: labo_projet_service
+    ports:
+      - "8083:8083"
+    expose:
+      - "8083"
+    healthcheck:
+      test: [ "CMD","curl","http://localhost:8083/actuator/health" ]
+      interval: 10s
+      retries: 4
+    environment:
+      - DISCOVERY_SERVICE_URL=http://192.168.100.10:8761/eureka
+      - CONFIG_SERVICE_URL=http://192.168.100.20:9999
+    depends_on:
+      labo_config_service:
+        condition: service_healthy
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24

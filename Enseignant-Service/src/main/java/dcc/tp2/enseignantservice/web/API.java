@@ -31,7 +31,6 @@ public class API {
         List<Enseignant> enseignants = enseignantService.GetAll_Enseignant();
         return ResponseEntity.ok(enseignants);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<Enseignant> Get_ByID(@PathVariable Long id){
         Enseignant e = enseignantService.Get_EnseignantByID(id);

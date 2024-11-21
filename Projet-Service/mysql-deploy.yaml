@@ -1,0 +1,61 @@
+#kubectl delete pvc mysql-pv-claim
+#kubectl exec -it <mysql-pod-name> -- mysql -u root -p
+#use nom_db;
+#show tables;
+#INSERT INTO enseignant (id, nom, prenom, cne, email, password, thematique, Role) VALUES (NULL, 'adil', 'mrini', 'CNE123456', 'adil@gmail.com', 'adil123', 'Informatique', 'ADMIN');
+#SELECT * FROM enseignant;
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Taille du volume, ajustez selon vos besoins
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql
+          env:
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: 'yes'
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-storage
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: LoadBalancer

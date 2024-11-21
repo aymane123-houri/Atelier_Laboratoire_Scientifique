@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeExchange(auth -> auth.pathMatchers("/ENSEIGNANT-SERVICE/Enseignants/email/{id}").permitAll())
                 .authorizeExchange(auth -> auth.pathMatchers("/CHERCHEUR-SERVICE/Chercheurs/email/{id}").permitAll())
-                .authorizeExchange(auth -> auth.pathMatchers("/CHERCHEUR-SERVICE/Chercheurs").hasAuthority("Chercheur"))
+                .authorizeExchange(auth -> auth.pathMatchers("/CHERCHEUR-SERVICE/Chercheurs").hasAuthority("SCOPE_Chercheur"))
                          .authorizeExchange(auth -> auth.pathMatchers("/ENSEIGNANT-SERVICE/Enseignants/**").hasAuthority("SCOPE_Enseignant"))
                          .authorizeExchange(auth -> auth.anyExchange().authenticated())
                          .oauth2ResourceServer(oauth2 -> oauth2.jwt());
