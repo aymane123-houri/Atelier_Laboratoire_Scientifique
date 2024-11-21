@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: discovery-service
-          image: ayhouri/labo_discovery_service
-          imagePullPolicy: IfNotPresent
+          image: labo_discovery_service
+          imagePullPolicy: Never
 
           ports:
             - containerPort: 8761

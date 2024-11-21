@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: enseignant-service
-          image: ayhouri/labo_enseignant_service
-          imagePullPolicy: IfNotPresent
+          image: labo_enseignant_service
+          imagePullPolicy: Never
           ports:
             - containerPort: 8081
           env:

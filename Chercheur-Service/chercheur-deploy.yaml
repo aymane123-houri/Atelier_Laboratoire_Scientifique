@@ -14,10 +14,10 @@ spec:
     spec:
       containers:
         - name: chercheur-service
-          image: labo_chercheur_images
+          image: labo_chercheur_service
           imagePullPolicy: Never
           ports:
-            - containerPort: 8082
+            - containerPort: 8084
           env:
             - name: DISCOVERY_SERVICE_URL
               value: http://discovery-service.default.svc.cluster.local:8761/eureka
@@ -26,7 +26,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 8082
+              port: 8084
             initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 3
@@ -42,6 +42,6 @@ spec:
     app: chercheur-service
   ports:
     - protocol: TCP
-      port: 8082
-      targetPort: 8082
+      port: 8084
+      targetPort: 8084
   type: LoadBalancer
