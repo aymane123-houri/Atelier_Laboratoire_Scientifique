@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: chercheur-service
-          image: labo_chercheur_service
-          imagePullPolicy: Never
+          image: ayhouri/labo_chercheur_service
+          imagePullPolicy: Always
           ports:
             - containerPort: 8084
           env:

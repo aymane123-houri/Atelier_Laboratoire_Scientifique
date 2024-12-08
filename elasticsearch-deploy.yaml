@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-service
+  labels:
+    app: elasticsearch-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch-service
+  template:
+    metadata:
+      labels:
+        app: elasticsearch-service
+    spec:
+      containers:
+        - name: elasticsearch-service
+          image: elasticsearch:8.15.4
+          env:
+            - name: bootstrap.memory_lock
+              value: "true"
+            - name: ES_JAVA_OPTS
+              value: "-Xms512m -Xmx512m"
+            - name: discovery.type
+              value: "single-node"
+            - name: xpack.security.enabled
+              value: "false"
+            - name: network.host
+              value: "0.0.0.0"
+          ports:
+            - containerPort: 9200
+              hostPort: 9200
+          volumeMounts:
+            - name: elasticsearch-data
+              mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: elasticsearch-data
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: elasticsearch-service
+  ports:
+    - protocol: TCP
+      port: 9200
+      targetPort: 9200

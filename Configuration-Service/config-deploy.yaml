@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: config-service
-          image: labo_config_service
-          imagePullPolicy: Never
+          image: ayhouri/labo_config_service
+          imagePullPolicy: Always
           ports:
             - containerPort: 9999
           env:
