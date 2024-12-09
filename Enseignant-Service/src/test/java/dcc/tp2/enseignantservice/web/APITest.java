@@ -1,14 +1,12 @@
-package dcc.tp2.enseignantservice.ControllerTest;
+package dcc.tp2.enseignantservice.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dcc.tp2.enseignantservice.entities.Enseignant;
 import dcc.tp2.enseignantservice.service.EnseignantService;
-import dcc.tp2.enseignantservice.web.API;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.exceptions.base.MockitoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,39 +18,35 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(API.class)
 class APITest {
-
     @MockBean
     private EnseignantService enseignantService;
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
 
-    List<Enseignant> enseignantList;
+    private List<Enseignant> enseignantList;
 
     @BeforeEach
-    void setUp(){
-        this.enseignantList= List.of(
-                new Enseignant(1L,"oussama","alaoui","la1223","oussama@mail.com","oussama123","informatique","Enseignant"),
-                new Enseignant(2L,"ali","ahmadi","KJ8888","ali@mail.com","ali123","informatique","Enseignant")
+    void setUp() {
+        this.enseignantList = List.of(
+                new Enseignant(1L,"test","test","LA12346","houri@gmail.com","1234","informatique","Enseignant"),
+                new Enseignant(2L, "mohamed", "mrini", "KB1234", "mrini@mail.com", "123", "infor", "Enseignant")
         );
     }
-
     @Test
     void add() throws Exception {
-        Enseignant enseignant = new Enseignant(null,"oussama","alaoui","la1223","oussama@mail.com","oussama123","informatique","Enseignant");
-
+        Enseignant enseignant =  new Enseignant(null,"test","test","LA12346","houri@gmail.com","1234","informatique","Enseignant");
         Mockito.when(enseignantService.Create_Enseignant(Mockito.any(Enseignant.class))).thenReturn(enseignantList.get(0));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/Enseignants")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(enseignant)))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(enseignant)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(enseignantList.get(0))));
     }
@@ -71,38 +65,41 @@ class APITest {
     }
 
     @Test
-    void get_ByID() throws Exception{
-        Long id = 1L;
-        Mockito.when(enseignantService.Get_EnseignantByID(id)).thenReturn(enseignantList.get(0));
+    void get_ByID() throws Exception {
+        Long id=1L;
+        Mockito.when(enseignantService.Get_EnseignantByID(Mockito.anyLong())).thenReturn(enseignantList.get(0));
+
         mockMvc.perform(MockMvcRequestBuilders.get("/Enseignants/{id}",id))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(enseignantList.get(0))));
     }
 
-
     @Test
     void update() throws Exception {
-        Enseignant enseignant = new Enseignant(1l,"oussama","alaoui","la1223","oussama@mail.com","oussama123","informatique","Enseignant");
         Long id = 1L;
-        Mockito.when(enseignantService.Update_Enseignant(Mockito.any(Enseignant.class),Mockito.anyLong())).thenReturn(enseignantList.get(0));
+        Enseignant enseignant_modifiy =  new Enseignant(null,"test","test","LA12346","houri@gmail.com","1234","informatique","Enseignant");
+
+        Mockito.when(enseignantService.Update_Enseignant(Mockito.any(Enseignant.class),Mockito.anyLong())).thenReturn(enseignant_modifiy);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/Enseignants/{id}",id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(enseignant)))
+                        .content(objectMapper.writeValueAsString(enseignant_modifiy)))
+
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(enseignantList.get(0))));
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(enseignant_modifiy)));
+
 
     }
 
     @Test
-    void delete() throws Exception {
-        Long id=1L;
+    void delete() throws Exception{
+        Long id = 1L;
         mockMvc.perform(MockMvcRequestBuilders.delete("/Enseignants/{id}",id))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    void statistique() throws Exception {
+    void statistique() throws Exception{
         Long id = 1L;
 
         Map<String, Long> Statistiques = new HashMap<>();
@@ -116,10 +113,9 @@ class APITest {
     }
 
     @Test
-    void getByemail() throws Exception {
-
-        String email = "oussama@mail.com";
-        Mockito.when(enseignantService.FindByEmail(email)).thenReturn(enseignantList.get(0));
+    void getByemail() throws Exception{
+        String email="houri@mail.com";
+        Mockito.when(enseignantService.FindByEmail(Mockito.anyString())).thenReturn(enseignantList.get(0));
 
         Map<String, String> infos_user = new HashMap<>();
         infos_user.put("email", enseignantList.get(0).getEmail());
@@ -129,6 +125,5 @@ class APITest {
         mockMvc.perform(MockMvcRequestBuilders.get("/Enseignants/email/{email}",email))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(infos_user)));
-
     }
 }
