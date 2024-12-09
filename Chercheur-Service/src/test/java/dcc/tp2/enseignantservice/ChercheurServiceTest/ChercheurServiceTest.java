@@ -1,4 +1,4 @@
-package dcc.tp2.chercheurservice.ChercheurServiceTest;
+package dcc.tp2.enseignantservice.ChercheurServiceTest;
 
 import dcc.tp2.chercheurservice.client.EnseignantRestFeign;
 import dcc.tp2.chercheurservice.entities.Chercheur;

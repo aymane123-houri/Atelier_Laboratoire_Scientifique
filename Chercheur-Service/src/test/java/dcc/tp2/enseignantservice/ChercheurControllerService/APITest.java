@@ -1,4 +1,4 @@
-package dcc.tp2.chercheurservice.ChercheurControllerService;;
+package dcc.tp2.enseignantservice.ChercheurControllerService;
 
 import dcc.tp2.chercheurservice.entities.Chercheur;
 import dcc.tp2.chercheurservice.service.ChercheurService;
